@@ -9,7 +9,7 @@ export function getTransactionAmount(transaction) {
 }
 
 export function calculateSum(acc, item) {
-  return (acc += item);
+  return (acc += parseFloat(item));
 }
 
 export function getGreaterThanZero(item) {

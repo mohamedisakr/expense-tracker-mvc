@@ -58,8 +58,10 @@ export default class View {
     this.historyList.classList.add("list");
     this.app.append(this.historyH3, this.historyList);
 
-    /*
-    <h3>Add new transaction</h3>
+    this.newTransactionH3 = document.createElement("h3");
+    this.newTransactionH3.textContent = "Add new transaction";
+    this.app.append(this.newTransactionH3);
+    /*   
       <form id="form">
         <div class="form-control">
           <label for="text">Text</label>
@@ -74,11 +76,7 @@ export default class View {
         </div>
         <button class="btn">Add transaction</button>
       </form>
-    */
-    this.newTransactionH3 = document.createElement("h3");
-    this.newTransactionH3.textContent = "Add new transaction";
-    this.app.append(this.newTransactionH3);
-
+*/
     this.form = document.createElement("form");
     this.form.id = "form";
 
@@ -136,13 +134,10 @@ export default class View {
       this.historyList.append(noElements);
     } else {
       transactions.forEach(transaction => {
-        // <li class="minus">
-        //     Cash <span>-$400</span>
-        //     <button class="delete-btn">X</button>
-        // </li>
         const listItem = document.createElement("li");
         listItem.id = transaction.id;
         listItem.classList.add(transaction.amount < 0 ? "minus" : "plus");
+        listItem.textContent = `${transaction.text}`;
 
         const span = document.createElement("span");
         span.textContent = `$${transaction.amount}`;
@@ -157,11 +152,22 @@ export default class View {
     }
   }
 
+  updateBalance(balance) {
+    this.balanceAmountHeading.textContent = balance;
+  }
+
+  updateIncome(income) {
+    this.incomePara.textContent = income;
+  }
+
+  updateExpenses(expenses) {
+    this.expensePara.textContent = expenses;
+  }
+
   // event listener for the submit event on the form
   bindAddTransaction(handler) {
-    // alert("submit button");
     this.form.addEventListener("submit", event => {
-      alert(event.target);
+      // alert(event.target);
       event.preventDefault();
       if (this._transText && this._transAmount) {
         handler(this._transText, this._transAmount);
@@ -171,6 +177,7 @@ export default class View {
     });
   }
 
+  // event listener for the delete event on the transaction list
   bindDeleteTransaction(handler) {
     this.historyList.addEventListener("click", event => {
       if (event.target.classList.contains("delete-btn")) {

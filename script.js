@@ -108,3 +108,11 @@ const dummyTransactions = [
   { id: 4, text: "Camera", amount: 150 }
 ];
 */
+
+//[];
+// [
+//   { id: 39466881, text: "Camera", amount: -3000 },
+//   { id: 19309512, text: "salary", amount: 30000 },
+//   { id: 33293802, text: "alcohel", amount: -200 },
+//   { id: 96557521, text: "laptop", amount: -15000 }
+// ];

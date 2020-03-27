@@ -8,12 +8,8 @@ import {
 
 export default class Model {
   constructor() {
-    this.transactions = [
-      { id: 39466881, text: "Camera", amount: -3000 },
-      { id: 19309512, text: "salary", amount: 30000 },
-      { id: 33293802, text: "alcohel", amount: -200 },
-      { id: 96557521, text: "laptop", amount: -15000 }
-    ];
+    this.transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    console.log(this.transactions);
   }
 
   addTransaction(text, amount) {
@@ -23,33 +19,47 @@ export default class Model {
           ? this.transactions[this.transactions.length - 1].id + 1
           : 1,
       text,
-      amount
+      amount: parseFloat(amount)
     };
     this.transactions.push(transaction);
-    this.onTransactionListChanged(this.transactions);
+    // this.onTransactionListChanged(this.transactions);
+    this._commit(this.transactions);
   }
 
   deleteTransaction(id) {
     this.transactions = this.transactions.filter(item => item.id !== id);
-    this.onTransactionListChanged(this.transactions);
+    // this.onTransactionListChanged(this.transactions);
+    this._commit(this.transactions);
   }
 
   bindTransactionListChanged(callback) {
     this.onTransactionListChanged = callback;
   }
 
+  bindIncomeChanged(callback) {
+    this.onIncomeChanged = callback;
+  }
+
+  bindBalanceChanged(callback) {
+    this.onBalanceChanged = callback;
+  }
+
+  bindExpensesChanged(callback) {
+    this.onExpensesChanged = callback;
+  }
+
   getIncome() {
     const amounts = this.transactions.map(getTransactionAmount);
     const income = amounts
       .filter(getGreaterThanZero)
-      .reduce(calculateSum)
+      .reduce(calculateSum, 0)
       .toFixed(2);
     return income;
   }
 
   getBalance() {
     const amounts = this.transactions.map(getTransactionAmount);
-    const total = amounts.reduce(calculateSum).toFixed(2);
+    const total = amounts.reduce(calculateSum, 0).toFixed(2);
     return total;
   }
 
@@ -57,8 +67,16 @@ export default class Model {
     const amounts = this.transactions.map(getTransactionAmount);
     const expenses = amounts
       .filter(getLessThanZero)
-      .reduce(calculateSum)
+      .reduce(calculateSum, 0)
       .toFixed(2);
     return expenses;
+  }
+
+  _commit(transactions) {
+    this.onTransactionListChanged(this.transactions);
+    this.onBalanceChanged(this.getBalance());
+    this.onIncomeChanged(this.getIncome());
+    this.onExpensesChanged(this.getExpenses());
+    localStorage.setItem("transactions", JSON.stringify(transactions));
   }
 }

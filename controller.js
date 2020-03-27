@@ -6,13 +6,21 @@ export default class Controller {
     this.model = model;
     this.view = view;
 
-    // display initial transactions
-    this.onTransactionListChanged(this.model.transactions);
-
     this.view.bindAddTransaction(this.handleAddTransaction);
     this.view.bindDeleteTransaction(this.handleDeleteTransaction);
 
+    // display initial transactions
+    this.onTransactionListChanged(this.model.transactions);
+
+    // update balance, income & expenses
+    this.onUdateBalance(this.model.getBalance());
+    this.onUpdateIncome(this.model.getIncome());
+    this.onUpdateExpenses(this.model.getExpenses());
+
     this.model.bindTransactionListChanged(this.onTransactionListChanged);
+    this.model.bindBalanceChanged(this.onUdateBalance);
+    this.model.bindIncomeChanged(this.onUpdateIncome);
+    this.model.bindExpensesChanged(this.onUpdateExpenses);
   }
 
   onTransactionListChanged = transactions => {
@@ -25,5 +33,18 @@ export default class Controller {
 
   handleDeleteTransaction = id => {
     this.model.deleteTransaction(id);
+  };
+
+  // updateBalance, updateIncome, updateExpenses
+  onUdateBalance = balance => {
+    this.view.updateBalance(balance);
+  };
+
+  onUpdateIncome = income => {
+    this.view.updateIncome(income);
+  };
+
+  onUpdateExpenses = expenses => {
+    this.view.updateExpenses(expenses);
   };
 }
